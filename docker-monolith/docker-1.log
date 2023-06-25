@@ -1,0 +1,13 @@
+user@DESKTOP-2UFSLC2:~/asazanoff_microservices$ docker images
+REPOSITORY                  TAG       IMAGE ID       CREATED         SIZE
+asazanoff/ubuntu-tmp-file   latest    549a162f5442   6 seconds ago   206MB
+nginx                       latest    eb4a57159180   10 days ago     187MB
+ubuntu                      22.04     99284ca6cea0   2 weeks ago     77.8MB
+ubuntu                      18.04     f9a80a55f492   3 weeks ago     63.2MB
+hello-world                 latest    9c7a54a9a43c   7 weeks ago     13.3kB
+
+
+
+При inspect контейнера мы видим вывод по конкретному контейнеру, его состояние и параметры его запуска, включая некоторую информацию по образу.
+При inspect образа мы видим вывод только по образу.
+

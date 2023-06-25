@@ -1,0 +1,12 @@
+---
+- name: Install engine
+  hosts: all
+  become: true
+  tasks:
+    - name: Run image
+      community.docker.docker_container:
+        name: "reddit"
+        image: "asazanoff/otus-reddit:1.0"
+        ports:
+          - 9292:9292
+        detach: true

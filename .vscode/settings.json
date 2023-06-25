@@ -1,0 +1,14 @@
+{
+    "ansible.python.interpreterPath": "/bin/python3",
+    "yaml.schemas": {
+        "kubernetes": [
+            "*.k8s.yaml",
+            "*.k8s.yml"
+        ],
+        "file:///home/user/.vscode-server/extensions/docsmsft.docs-yaml-1.0.0/dist/toc.schema.json": "/toc\\.yml/i",
+        "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/playbook": [
+            "file:///home/user/asazanoff_microservices/docker-monolith/infra/install-docker.yml",
+            "file:///home/user/asazanoff_microservices/docker-monolith/infra/launch-docker.yml"
+        ]
+    }
+}

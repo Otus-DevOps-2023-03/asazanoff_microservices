@@ -1,0 +1,66 @@
+---
+- name: Install engine
+  hosts: all
+  become: true
+  tasks:
+    - name: Install Docker
+      ansible.builtin.apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+          - python3-pip
+          - virtualenv
+          - python3-setuptools
+        state: latest
+        update_cache: true
+
+    - name: Add Docker GPG apt Key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+    - name: Add GC GPG apt Key
+      apt_key:
+        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+        state: present
+
+    - name: Add Docker Repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu focal stable
+        state: present
+    - name: Add GC Repository
+      apt_repository:
+        repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
+        state: present
+
+    - name: Update apt and install docker-ce
+      apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - kubelet
+          - kubeadm
+          - kubectl
+        state: latest
+        update_cache: true
+
+    - name: update containerd file
+      lineinfile:
+        path: /etc/containerd/config.toml
+        regexp: '^disabled_plugins'
+        line: enabled_plugins = ["cri"]
+        state: present
+    - name: Restart containerd service
+      ansible.builtin.service:
+        name: containerd
+        state: restarted
+
+    - name: Initialize the Kubernetes cluster using kubeadm
+      command: kubeadm init --apiserver-cert-extra-sans={{ ansible_host }} --control-plane-endpoint={{ ansible_host }} --pod-network-cidr=10.244.0.0/16
+      when: inventory_hostname in groups["k8s_master"]
+      register: kubeadmoutput
+    - name: Print output
+      debug: msg="{{ kubeadmoutput.stdout_lines }}"
+      when: inventory_hostname in groups["k8s_master"]

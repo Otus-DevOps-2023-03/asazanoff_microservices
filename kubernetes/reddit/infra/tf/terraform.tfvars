@@ -1,0 +1,8 @@
+//cloud_id                 = "b1g7mh55020i2hpup3cj"
+//folder_id                = "b1g4871feed9nkfl3dnu"
+zone                     = "ru-central1-a"
+image_id                 = "fd85f37uh98ldl1omk30"
+subnet_id                = "e9bf7cfgsfcka2ae88lp"
+public_key_path          = "~/.ssh/id_rsa.pub"
+service_account_key_file = "../../secrets/tf-sa-key.json"
+private_key_path         = "~/.ssh/id_rsa"

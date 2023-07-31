@@ -1,7 +1,7 @@
-FROM alpine:3.13.10
-
-RUN apk update && apk add ruby-full ruby-dev build-base
-RUN gem install bundler:1.17.2
+FROM ubuntu:16.04
+RUN apt-get update \
+    && apt-get install -y ruby-full ruby-dev build-essential \
+    && gem install bundler -v 2.3.26 --no-ri --no-rdoc
 
 ENV APP_HOME /app
 RUN mkdir $APP_HOME

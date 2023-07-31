@@ -1,4 +1,6 @@
 build_info.txt
+docker-compose.yml
+prometheus/
 
 ## python specific
 *.pyc

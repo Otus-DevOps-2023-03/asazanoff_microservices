@@ -11,5 +11,6 @@ spec:
     component: post
   ports:
   - port: 5000
-    targetPort: 5000
     protocol: TCP
+    targetPort: 5000
+    

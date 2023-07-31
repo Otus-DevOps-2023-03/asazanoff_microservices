@@ -5,10 +5,15 @@
             "*.k8s.yaml",
             "*.k8s.yml"
         ],
+        "file:///home/user/.vscode-server/extensions/docsmsft.docs-yaml-1.0.0/dist/toc.schema.json": "/toc\\.yml/i",
         "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/playbook": [
             "file:///home/user/asazanoff_microservices/docker-monolith/infra/install-docker.yml",
             "file:///home/user/asazanoff_microservices/docker-monolith/infra/launch-docker.yml"
         ],
-        "kubernetes://schema/apps/v1@deployment+v1@service": "file:///home/user/asazanoff_microservices/kubernetes/reddit/ui-deployment.yaml"
+        "kubernetes://schema/apps/v1@deployment+v1@service": [
+            "file:///home/user/asazanoff_microservices/kubernetes/reddit/ui-deployment.yaml",
+            "file:///home/user/asazanoff_microservices/kubernetes/reddit/mongo-deployment.yml"
+        ],
+        "kubernetes://schema/apps/v1@deployment": "file:///home/user/asazanoff_microservices/kubernetes/reddit/ui-deployment.yml"
     }
 }

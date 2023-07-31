@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: comment
+  labels:
+    app: reddit
+    component: comment
+spec:
+  selector:
+    app: reddit
+    component: comment
+  ports:
+  - port: 9292
+    targetPort: 9292
+    protocol: TCP

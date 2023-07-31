@@ -1,5 +1,5 @@
 {
-    "ansible.python.interpreterPath": "/bin/python3",
+    "ansible.python.interpreterPath": "/usr/bin/python3",
     "yaml.schemas": {
         "kubernetes": [
             "*.k8s.yaml",
@@ -8,6 +8,7 @@
         "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/playbook": [
             "file:///home/user/asazanoff_microservices/docker-monolith/infra/install-docker.yml",
             "file:///home/user/asazanoff_microservices/docker-monolith/infra/launch-docker.yml"
-        ]
+        ],
+        "kubernetes://schema/apps/v1@deployment+v1@service": "file:///home/user/asazanoff_microservices/kubernetes/reddit/ui-deployment.yaml"
     }
 }

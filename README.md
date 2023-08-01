@@ -87,3 +87,13 @@ RUN gem install bundler:1.17.2
 ## ДЗ 27
 
 В этом домашнем задании я познакомился с утилитой kubeadm и kubectl, и даже получилось запустить контейнеры в подах.
+
+## ДЗ 29
+
+В этом ДЗ мы заставили работать приложение в Кебернетес-кластере, настроив общение между ними при помощи сервисов.
+
+Сервис доступен по адресу http://158.160.31.149:30000/ .
+
+Для разворачивания кластера с нодами примените инфраструктуру Терраформ из директории `kubernetes/reddit-infra/tf-managed/`.
+
+Для доступа к дашбордам примените манифест dashboard.yml: `kubectl apply -f kubernetes/reddit/dashboard.yml`, затем получите токен для доступа к дашборду `kubectl -n kubernetes-dashboard create token admin-user` и запустите `kubectl proxy`. Полученный токен вставьте на странице `http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/` и посмотрите дашборд.

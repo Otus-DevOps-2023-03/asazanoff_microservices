@@ -1,32 +1,32 @@
 apiVersion: apps/v1
 kind: Deployment
-metadata:
-  name: ui-deployment
-spec:
-  replicas: 1
+metadata: # Блок метаданных деплоя
+  name: ui
+  labels:
+    app: reddit
+    component: ui
+spec: # Блок спецификации деплоя
+  replicas: 3
   selector:
     matchLabels:
-      app: ui
-  template:
+      app: reddit
+      component: ui
+  template: # Блок описания POD-ов
     metadata:
-      name: ui
+      name: ui-pod
       labels:
-        app: ui
+        app: reddit
+        component: ui
     spec:
       containers:
-      - image: asazanoff/ui:latest
+      - image: asazanoff/ui:logging # Не забудьте подставить свой образ
         name: ui
-        ports:
-        - containerPort: 9292
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: my-service
-spec:
-  type: NodePort
-  ports:
-  - port: 9292
-    targetPort: 9292
-  selector:  # <<<
-    app: ui  # <<<
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        env:
+        - name: ENV
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace

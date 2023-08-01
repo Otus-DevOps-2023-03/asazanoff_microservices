@@ -1,4 +1,5 @@
-.vscode
+.vscode/
+.vsdoce/settings.json
 .terraform
 .terraform.lock*
 terraform.tfstate*

@@ -1,18 +1,31 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: post-deployment
+  name: post
+  labels:
+    app: reddit
+    component: post
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
-      app: post
+      app: reddit
+      component: post
   template:
     metadata:
       name: post
       labels:
-        app: post
+        app: reddit
+        component: post
     spec:
       containers:
-      - image: asazanoff/post:latest
+      - image: asazanoff/post:logging
         name: post
+        env:
+        - name: POST_DATABASE_HOST
+          value: post-db
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"

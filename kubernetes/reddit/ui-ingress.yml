@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ui
+  labels:
+    name: ui
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt"
+    kubernetes.io/ingress.class: "nginx"
+    acme.cert-manager.io/http01-edit-in-place: "true"
+    service.beta.kubernetes.io/do-loadbalancer-hostname: "kub.xn--e1adnf2fb.xn--p1ai"
+spec:
+  tls:
+  - hosts:
+    - kub.xn--e1adnf2fb.xn--p1ai
+    secretName: letsencrypt
+  rules:
+  - host: kub.xn--e1adnf2fb.xn--p1ai
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: ui
+            port:
+              number: 80

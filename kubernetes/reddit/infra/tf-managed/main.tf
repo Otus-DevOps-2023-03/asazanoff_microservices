@@ -2,7 +2,7 @@ terraform {
   required_providers {
     yandex = {
       source  = "yandex-cloud/yandex"
-      version = "0.95.0"
+      version = "0.96.1"
     }
   }
 }
@@ -18,14 +18,16 @@ resource "yandex_vpc_network" "mynet" {
 
 resource "yandex_vpc_subnet" "mysubnet" {
   v4_cidr_blocks = ["10.1.0.0/16"]
-  zone           = "ru-central1-a"
+  zone           = var.zone
   network_id     = yandex_vpc_network.mynet.id
 }
 
 resource "yandex_kubernetes_cluster" "k8s-zonal" {
   network_id = yandex_vpc_network.mynet.id
+  name = "kubernetes"
   master {
     version = var.k8s_version
+    public_ip = true
     zonal {
       zone      = yandex_vpc_subnet.mysubnet.zone
       subnet_id = yandex_vpc_subnet.mysubnet.id
@@ -34,6 +36,8 @@ resource "yandex_kubernetes_cluster" "k8s-zonal" {
   }
   service_account_id      = yandex_iam_service_account.myaccount.id
   node_service_account_id = yandex_iam_service_account.myaccount.id
+  release_channel = var.release_channel
+  network_policy_provider = "CALICO"
   depends_on = [
     yandex_resourcemanager_folder_iam_member.k8s-clusters-agent,
     yandex_resourcemanager_folder_iam_member.vpc-public-admin,
@@ -52,19 +56,21 @@ resource "yandex_kubernetes_node_group" "my_node_group" {
   instance_template {
     platform_id = "standard-v2"
     network_interface {
-      nat        = true
+      //nat        = true
       subnet_ids = ["${yandex_vpc_subnet.mysubnet.id}"]
     }
     resources {
       memory = 4
       cores  = 4
+      core_fraction = 5
     }
     boot_disk {
       type = "network-hdd"
       size = 64
     }
+
     scheduling_policy {
-      preemptible = false
+      preemptible = true
     }
     metadata = {
       ssh-keys = "ubuntu:${file(var.public_key_path)}"
@@ -79,7 +85,7 @@ resource "yandex_kubernetes_node_group" "my_node_group" {
   }
   allocation_policy {
     location {
-      zone = "ru-central1-a"
+      zone = var.zone
     }
   }
   maintenance_policy {
@@ -121,6 +127,32 @@ resource "yandex_resourcemanager_folder_iam_member" "images-puller" {
   # Сервисному аккаунту назначается роль "container-registry.images.puller".
   folder_id = var.folder_id
   role      = "container-registry.images.puller"
+  member    = "serviceAccount:${yandex_iam_service_account.myaccount.id}"
+}
+
+resource "yandex_resourcemanager_folder_iam_member" "alb-editor" {
+  # Сервисному аккаунту назначается роль "alb.editor".
+  folder_id = var.folder_id
+  role      = "alb.editor"
+  member    = "serviceAccount:${yandex_iam_service_account.myaccount.id}"
+}
+
+resource "yandex_resourcemanager_folder_iam_member" "compute-viewer" {
+  # Сервисному аккаунту назначается роль "compute.viewer".
+  folder_id = var.folder_id
+  role      = "compute.viewer"
+  member    = "serviceAccount:${yandex_iam_service_account.myaccount.id}"
+}
+resource "yandex_resourcemanager_folder_iam_member" "editor" {
+  # Сервисному аккаунту назначается роль "editor".
+  folder_id = var.folder_id
+  role      = "editor"
+  member    = "serviceAccount:${yandex_iam_service_account.myaccount.id}"
+}
+resource "yandex_resourcemanager_folder_iam_member" "certificate-manager-certificates-downloader" {
+  # Сервисному аккаунту назначается роль "certificate-manager.certificates.downloader".
+  folder_id = var.folder_id
+  role      = "certificate-manager.certificates.downloader"
   member    = "serviceAccount:${yandex_iam_service_account.myaccount.id}"
 }
 
@@ -181,4 +213,17 @@ resource "yandex_vpc_security_group" "k8s-public-services" {
     from_port      = 0
     to_port        = 65535
   }
+  ingress {
+    protocol          = "ANY"
+    description       = "Правило разрешает доступ для Кубернетес снаружи."
+    from_port         = 0
+    to_port           = 65535
+    v4_cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "yandex_compute_disk" "pv" {
+  name = "k8s"
+  size = 4
+  description = "disk for k8s"
 }

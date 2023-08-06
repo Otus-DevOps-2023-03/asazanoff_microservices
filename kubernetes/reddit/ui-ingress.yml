@@ -13,7 +13,7 @@ spec:
   tls:
   - hosts:
     - kub.xn--e1adnf2fb.xn--p1ai
-    secretName: letsencrypt
+    secretName: ui-ingress
   rules:
   - host: kub.xn--e1adnf2fb.xn--p1ai
     http:

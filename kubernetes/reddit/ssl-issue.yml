@@ -9,7 +9,7 @@ spec:
     server: https://acme-v02.api.letsencrypt.org/directory
     email: enzel@live.com
     privateKeySecretRef:
-      name: letsencrypt
+      name: ui-ingress
     solvers:
     - http01:
         ingress:

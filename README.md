@@ -97,3 +97,32 @@ RUN gem install bundler:1.17.2
 Для разворачивания кластера с нодами примените инфраструктуру Терраформ из директории `kubernetes/reddit-infra/tf-managed/`.
 
 Для доступа к дашбордам примените манифест dashboard.yml: `kubectl apply -f kubernetes/reddit/dashboard.yml`, затем получите токен для доступа к дашборду `kubectl -n kubernetes-dashboard create token admin-user` и запустите `kubectl proxy`. Полученный токен вставьте на странице `http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/` и посмотрите дашборд.
+
+## ДЗ 30
+
+Для выпуска Летсэнкрипт-сертификата примените манифест `kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.9.1/cert-manager.yaml`, `kubernetes/reddit/ssl-issue.yaml` и обновленный для TLS `kubernetes/reddit/ui-ingress.yaml`. Документация [тут](https://cloud.yandex.ru/docs/managed-kubernetes/tutorials/ingress-cert-manager).
+
+Шаги для развертывания:
+1. Примените инфраструктуру через Terraform
+2. Получите креды через yc `yc managed-kubernetes cluster get-credentials kubernetes --external --force`
+3. Создайте Ingress `kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.1/deploy/static/provider/cloud/deploy.yaml`
+4. Создайте ресурсы для Letsencrypt `kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.12.3/cert-manager.yaml`
+5. Создайте пространство имен `kubectl apply -f dev-namespace.yml` 
+6. Примените манифесты `kubectl apply -f ssl-issue.yml -f dashboard.yml`  
+7. Переключитесь в пространство имен dev `kubectl config set-context --current --namespace=dev` и примените манифесты для работы приложения
+  ```
+  kubectl apply \
+  -f comment-deployment.yml \
+  -f comment-mongodb-service.yml \
+  -f comment-service.yml \
+  -f mongo-deployment.yml \
+  -f mongodb-service.yml \
+  -f post-deployment.yml \
+  -f post-mongodb-service.yml \
+  -f post-service.yml \
+  -f ui-deployment.yml \
+  -f ui-ingress.yml \
+  -f ui-service.yml \
+  -f pv.yml \
+  -f pvc.yml 
+  ```

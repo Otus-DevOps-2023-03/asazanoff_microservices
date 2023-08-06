@@ -27,5 +27,5 @@ spec:
           value: comment-db
         resources:
           limits:
-            memory: "128Mi"
+            memory: "512Mi"
             cpu: "500m"

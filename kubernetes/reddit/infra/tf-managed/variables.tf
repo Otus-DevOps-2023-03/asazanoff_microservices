@@ -25,3 +25,6 @@ variable "k8s_version" {
 variable "folder_id" {
   description = "Folder ID"
 }
+variable "release_channel" {
+  description = "Kubernetes release channel"
+}

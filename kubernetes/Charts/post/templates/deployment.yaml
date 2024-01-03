@@ -2,29 +2,32 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: post
+  name: {{ template "post.fullname" . }}
   labels:
     app: reddit
     component: post
+    release: {{ .Release.Name }}
 spec:
   replicas: 3
   selector:
     matchLabels:
       app: reddit
       component: post
+      release: {{ .Release.Name }}
   template:
     metadata:
       name: post
       labels:
         app: reddit
         component: post
+        release: {{ .Release.Name }}
     spec:
       containers:
-      - image: asazanoff/post:logging
+      - image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
         name: post
         env:
         - name: POST_DATABASE_HOST
-          value: post-db
+          value: {{ .Values.databaseHost | default (printf "%s-mongodb" .Release.Name) }}
         resources:
           limits:
             memory: "128Mi"

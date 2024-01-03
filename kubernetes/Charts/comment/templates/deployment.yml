@@ -2,29 +2,32 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: comment
+  name: {{ template "comment.fullname" . }}
   labels:
     app: reddit
     component: comment
+    release: {{ .Release.Name }}
 spec:
-  replicas: 3
+  replicas: {{ .Values.replicas }}
   selector:
     matchLabels:
       app: reddit
       component: comment
+      release: {{ .Release.Name }}
   template:
     metadata:
       name: comment
       labels:
         app: reddit
         component: comment
+        release: {{ .Release.Name }}
     spec:
       containers:
-      - image: asazanoff/comment:logging
+      - image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
         name: comment
         env:
         - name: COMMENT_DATABASE_HOST
-          value: comment-db
+          value: {{ .Values.databaseHost | default (printf "%s-mongodb" .Release.Name) }}
         resources:
           limits:
             memory: "512Mi"

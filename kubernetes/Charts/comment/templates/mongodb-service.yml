@@ -2,17 +2,19 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: comment-db
+  name: {{ template "comment.fullname" . }}
   labels:
     app: reddit
     component: mongo
     comment-db: "true"
+    release: {{ .Release.Name }}
 spec:
   ports:
-  - port: 27017
+  - port: {{ .Values.databasePort }}
     protocol: TCP
-    targetPort: 27017
+    targetPort: {{ .Values.databasePort }}
   selector:
     app: reddit
     component: mongo
     comment-db: "true"
+    release: {{ .Release.Name }}

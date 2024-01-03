@@ -1,0 +1,9 @@
+image:
+  repository: asazanoff/post
+  tag: logging
+
+databaseHost: post-db
+
+service:
+  internalPort: 5000
+  externalPort: 5000

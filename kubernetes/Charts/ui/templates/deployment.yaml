@@ -1,25 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata: # Блок метаданных деплоя
-  name: ui
+  name: {{ template "ui.fullname" . }}
   labels:
     app: reddit
     component: ui
+    release: {{ .Release.Name }}
 spec: # Блок спецификации деплоя
   replicas: 3
   selector:
     matchLabels:
       app: reddit
       component: ui
+      release: {{ .Release.Name }}
   template: # Блок описания POD-ов
     metadata:
       name: ui-pod
       labels:
         app: reddit
         component: ui
+        release: {{ .Release.Name }}
     spec:
       containers:
-      - image: asazanoff/ui:logging # Не забудьте подставить свой образ
+      - image: {{ .Values.image.repository }}:{{ .Values.image.tag }} # Не забудьте подставить свой образ
         name: ui
         resources:
           limits:

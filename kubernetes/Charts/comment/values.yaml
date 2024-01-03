@@ -1,0 +1,8 @@
+replicas: 3
+
+image:
+  repository: asazanoff/comment
+  tag: logging
+
+databaseHost: comment-db
+databasePort: 27017
